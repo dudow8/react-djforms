@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FormControl = ({handleChange, label, field, value, options = [], error}) => (
-    <FormControl>
+    <Wrapper>
         <Label>
             {label}
         </Label>
@@ -50,10 +50,10 @@ const FormControl = ({handleChange, label, field, value, options = [], error}) =
         {error && <ErrorMessage>
             {error}
         </ErrorMessage>}
-    </FormControl>
+    </Wrapper>
 );
 
-const FormControl = styled.div`
+const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin: 0px 5px;
