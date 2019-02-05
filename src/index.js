@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FormBuilder as FB } from './lib';
-
-ReactDOM.render(<div />, document.getElementById('root'));
+import { 
+    FormBuilder as FB,
+    FormComponent as Form
+} from './lib';
 
 const PosForm = FB.form(
+    null,
     FB.group({
         fields: [
             { name: 'HeaderTitle', label: 'Título principal', type: 'text' },
             { name: 'HeaderSubTitle', label: 'Subtítulo', type: 'text' },
-            { name: 'HeaderDescription', label: 'Descrição do header', type: 'text' }
+            { name: 'HeaderDescription', label: 'Descrição do header', type: 'text' },
         ]
     }),
     FB.collection({
@@ -24,7 +26,20 @@ const PosForm = FB.form(
                 ]
             })
         ],
-    })
+    }),
+    FB.form(
+        'payload',
+        FB.group({
+            fields: [
+                { name: 'HeaderTitlePayload', label: 'Título principal', type: 'text' },
+                { name: 'HeaderSubTitlePayload', label: 'Subtítulo', type: 'text' },
+            ]
+        }),
+    )
 );
 
-console.log(PosForm)
+ReactDOM.render(<div>
+    <Form structure={PosForm} />
+</div>, document.getElementById('root'));
+
+// console.log(PosForm)
