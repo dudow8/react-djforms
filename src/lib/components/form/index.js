@@ -7,10 +7,12 @@ class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = FormService.buildState(this.props.structure);
+        this.FormComponent = FormBuilder(this.props);
     }
 
     render() {
-        const { structure, state = {}, errors = {}, handleChange } = this.props;
+        const FormComponent = this.FormComponent;
+        return (<FormComponent />)
         // return (
         //     <>
         //         {structure.colection
@@ -41,27 +43,42 @@ class Form extends React.Component {
     }
 }
 
-const FormBuilder = () => (
+const FormBuilder = (formStructure) => (
     (props) => {
+        const { structure, state = {}, errors = {}, handleChange } = formStructure;
         if(!structure.collection && structure.form) {
-            const form = structure.form.reduce((form, item) => ({
-                ...buildState(item, form) 
-            }), {});
-            return structure.name ? { ...state, [structure.name]: form } : form;
+            const FormComponent = <>
+                {structure.form.map((form, key) => {
+                    const Component = FormBuilder({ ...formStructure, structure: form });
+                    return <Component key={key} />;
+                })}
+            </>;
+            return FormComponent;
         }
     
         if(structure.collection) {
-            return { ...state, [structure.name]: [] };
+            return <div>Collection {structure.name}</div>;
+        //     return { ...state, [structure.name]: [] };
         }
     
         if(!structure.form) {
-            const form = structure.fields.reduce(
-                (form, item) => ({
-                    ...form,
-                    [item.name]: ''
-                })
-            , {});
-            return { ...state, ...form };
+            return(
+                <Wrapper>
+                    <FormInputGroup orientation={structure.orientation || 'vertical'}>
+                        {structure.fields.map((item, key) => (
+                            <FormControl
+                                key={key}
+                                handleChange={handleChange}
+                                field={item}
+                                value={state[item.name]}
+                                error={errors[item.name]}
+                                label={item.label}
+                                options={item.options}
+                            />
+                        ))}
+                    </FormInputGroup>
+                </Wrapper>
+            )
         }
     }
 );

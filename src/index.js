@@ -14,6 +14,14 @@ const PosForm = FB.form(
             { name: 'HeaderDescription', label: 'Descrição do header', type: 'text' },
         ]
     }),
+    FB.group({
+        orientation: 'horizontal',
+        fields: [
+            { name: 'Currency', label: 'Moeda', type: 'text' },
+            { name: 'MoneyValue', label: 'Valor em Dinheiro', type: 'text' },
+            { name: 'DepositValue', label: 'Valor em Depósito', type: 'text' },
+        ]
+    }),
     FB.collection({
         name: 'regulaments',
         columns: { label: 'Arquivo de regulamento' },
