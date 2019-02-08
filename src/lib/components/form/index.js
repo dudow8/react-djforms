@@ -7,83 +7,94 @@ class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = FormService.buildState(this.props.structure);
-        this.FormComponent = FormBuilder(this.props);
     }
 
     render() {
-        const FormComponent = this.FormComponent;
-        return (<FormComponent />)
-        // return (
-        //     <>
-        //         {structure.colection
-        //             ? <></>
-        //             : <Wrapper>
-        //                 {structure.fields.map((fieldGroup, key) => (
-        //                     <FormInputGroup
-        //                         key={key}
-        //                         orientation={fieldGroup.orientation || 'vertical'}
-        //                     >
-        //                         {fieldGroup.fields.map((item, fieldKey) => (
-        //                             <FormControl
-        //                                 key={fieldKey}
-        //                                 handleChange={handleChange}
-        //                                 field={item}
-        //                                 value={state[item.name]}
-        //                                 error={errors[item.name]}
-        //                                 label={item.label}
-        //                                 options={item.options}
-        //                             />
-        //                         ))}
-        //                     </FormInputGroup>
-        //                 ))}
-        //             </Wrapper>
-        //         }
-        //     </>
-        // )
+        return (
+            <FormWrapper>
+                <FormComponent
+                    structure={this.props.structure}
+                    state={this.state}
+                    formChange={
+                        (state) => {
+                            this.setState(state);
+                            console.log('FormComponent CHANGE', state)
+                        }
+                    }
+                />
+            </FormWrapper>
+        )
     }
 }
 
-const FormBuilder = (formStructure) => (
-    (props) => {
-        const { structure, state = {}, errors = {}, handleChange } = formStructure;
-        if(!structure.collection && structure.form) {
-            const FormComponent = <>
-                {structure.form.map((form, key) => {
-                    const Component = FormBuilder({ ...formStructure, structure: form });
-                    return <Component key={key} />;
-                })}
-            </>;
-            return FormComponent;
-        }
-    
-        if(structure.collection) {
-            return <div>Collection {structure.name}</div>;
-        //     return { ...state, [structure.name]: [] };
-        }
-    
-        if(!structure.form) {
-            return(
-                <Wrapper>
-                    <FormInputGroup orientation={structure.orientation || 'vertical'}>
-                        {structure.fields.map((item, key) => (
-                            <FormControl
-                                key={key}
-                                handleChange={handleChange}
-                                field={item}
-                                value={state[item.name]}
-                                error={errors[item.name]}
-                                label={item.label}
-                                options={item.options}
-                            />
-                        ))}
-                    </FormInputGroup>
-                </Wrapper>
-            )
-        }
-    }
-);
+const handleChange = ({target}, state = {}) => {
+    const name = target.name;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    return {
+        ...state,
+        [name]: value
+    };
+}
 
-const Wrapper = styled.form`
+const FormComponent = (props) => {
+    const { structure, state, formChange } = props;
+    if(!structure.collection && structure.form) {
+        return (
+            <>
+                {structure.form.map((form, key) => {
+                    const FormState = structure.name ? state[structure.name] : state;
+                    return <FormComponent
+                        key={key}
+                        structure={form}
+                        state={FormState}
+                        formChange={(form) => {
+                            formChange({
+                                ...state,
+                                ...structure.name
+                                    ? { [structure.name]: form } 
+                                    : form
+                            });
+                        }}
+                        handleChange={(event) => {
+                            formChange({
+                                ...state,
+                                ...structure.name
+                                    ? {[structure.name]: handleChange(event, FormState)}
+                                    : handleChange(event, FormState)
+                            });
+                        }}
+                    />;
+                })}
+            </>
+        );
+    }
+
+    if(structure.collection) {
+        return <div>Collection Table {structure.name + ' ' + JSON.stringify(state[structure.name])}</div>;
+    //     return { ...state, [structure.name]: [] };
+    }
+
+    if(!structure.form) {
+        return(
+            <FormInputGroup orientation={structure.orientation || 'vertical'}>
+                {structure.fields.map((item, key) => (
+                    <FormControl
+                        key={key}
+                        handleChange={props.handleChange}
+                        field={item}
+                        value={state[item.name]}
+                        // error={errors[item.name]}
+                        label={item.label}
+                        options={item.options}
+                    />
+                ))}
+            </FormInputGroup>
+        )
+    }
+}
+
+
+const FormWrapper = styled.form`
     width: 100%;
 `;
 const FormInputGroup = styled.div`
