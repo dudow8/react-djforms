@@ -7,6 +7,13 @@ class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = FormService.buildState(this.props.structure);
+        this.state.regulaments = [{
+            regulament: 'file://...',
+            label: 'Regulamento de Teste 1'
+        }, {
+            regulament: 'file://...',
+            label: 'Regulamento de Teste 2'
+        }]
     }
 
     render() {
@@ -70,8 +77,39 @@ const FormComponent = (props) => {
     }
 
     if(structure.collection) {
-        return <div>Collection Table {structure.name + ' ' + JSON.stringify(state[structure.name])}</div>;
-    //     return { ...state, [structure.name]: [] };
+        const columns = Object.keys(structure.columns);
+        const data = state[structure.name];
+        return(
+            <CollectionWrapper>
+                {structure.label && <h2>{structure.label}</h2>}
+                <Table>
+                    {columns.length && 
+                        <thead>
+                            <tr>
+                                <th width="1px">#</th>
+                                {columns.map((column, key) => (
+                                    <th key={key}>
+                                        {structure.columns[column]}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                    }
+                    <tbody>
+                        {data.map((row, key) => (
+                            <tr key={key}>
+                                <td></td>
+                                {columns.map(column => (
+                                    <td key={column}>
+                                        {row[column]}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </CollectionWrapper>
+        )
     }
 
     if(!structure.form) {
@@ -93,7 +131,6 @@ const FormComponent = (props) => {
     }
 }
 
-
 const FormWrapper = styled.form`
     width: 100%;
 `;
@@ -108,5 +145,45 @@ const FormInputGroup = styled.div`
     margin: 0px -5px;
     width: 100%;
 `;
+const CollectionWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 10px 0px 20px;
+
+    > h2 {
+        font-size: 18px;
+        font-weight: 600;
+        border-bottom: 1px solid #ddd;
+        padding: 0px 0px 10px;
+        margin: 0px 0px 0px;
+    }
+`;
+const Table = styled.table`
+    border: 0px;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+
+    thead th {
+        border-bottom: 1px solid #dddddd;
+        font-weight: 600;
+        text-align: left;
+        background: #eeeeee;
+        padding: 15px 10px;
+    }
+
+    tbody {
+        td {
+            border-bottom: 1px solid #eeeeee;
+            font-weight: 300;
+            text-align: left;
+            padding: 10px 10px;
+        }
+        tr:nth-child(even) td {
+            background: #fafafa;
+        }
+    }
+`
 
 export default Form;

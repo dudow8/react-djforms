@@ -14,17 +14,10 @@ const PosForm = FB.form(
             { name: 'HeaderDescription', label: 'Descrição do header', type: 'text' },
         ]
     }),
-    FB.group({
-        orientation: 'horizontal',
-        fields: [
-            { name: 'Currency', label: 'Moeda', type: 'text' },
-            { name: 'MoneyValue', label: 'Valor em Dinheiro', type: 'text' },
-            { name: 'DepositValue', label: 'Valor em Depósito', type: 'text' },
-        ]
-    }),
     FB.collection({
         name: 'regulaments',
-        columns: { label: 'Arquivo de regulamento' },
+        label: 'Regulamentos',
+        columns: { label: 'Arquivo de regulamento', 'regulament': 'Arquivo' },
         form: [
             FB.group({
                 orientation: 'vertical',
@@ -38,11 +31,32 @@ const PosForm = FB.form(
     FB.form(
         'payload',
         FB.group({
+            orientation: 'horizontal',
             fields: [
                 { name: 'HeaderTitlePayload', label: 'Título principal', type: 'text' },
                 { name: 'HeaderSubTitlePayload', label: 'Subtítulo', type: 'text' },
             ]
         }),
+        FB.form(
+            'payloadIntern',
+            FB.group({
+                orientation: 'horizontal',
+                fields: [
+                    { name: 'HeaderTitlePayload2', label: 'Título principal 2', type: 'text' },
+                    { name: 'HeaderSubTitlePayload2', label: 'Subtítulo 2', type: 'text' },
+                ]
+            }),
+            FB.form(
+                'payloadInternIntern',
+                FB.group({
+                    orientation: 'horizontal',
+                    fields: [
+                        { name: 'HeaderTitlePayload3', label: 'Título principal 3', type: 'text' },
+                        { name: 'HeaderSubTitlePayload3', label: 'Subtítulo 3', type: 'text' },
+                    ]
+                })
+            )
+        )
     )
 );
 
@@ -50,4 +64,4 @@ ReactDOM.render(<div>
     <Form structure={PosForm} />
 </div>, document.getElementById('root'));
 
-// console.log(PosForm)
+console.log('PosForm', PosForm)
