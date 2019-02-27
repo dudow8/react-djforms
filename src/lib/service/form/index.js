@@ -7,11 +7,13 @@ export const form = (name, ...form) => ({
 export const collection = ({
     columns = {},
     name,
+    label = null,
     ...form,
 }) => ({
     collection: true,
     columns,
     name,
+    label,
     ...form ? form : []
 });
 

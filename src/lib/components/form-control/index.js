@@ -86,6 +86,7 @@ const LongTextInput = styled.textarea`
     box-sizing: border-box;
 `;
 const Dropdown = styled.select`
+    background: white;
     border: 1px solid #dddddd;
     display: block;
     font-size: 14px;
