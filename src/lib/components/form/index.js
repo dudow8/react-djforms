@@ -12,16 +12,25 @@ class Form extends React.Component {
         };
     }
 
+    submit() {
+        const { onSubmit } = this.props;
+        onSubmit && onSubmit(this.state);
+    }
+
     render() {
         return (
-            <FormWrapper>
+            <FormWrapper
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    this.submit();
+                }}
+            >
                 <FormComponent
                     structure={this.props.structure}
                     state={this.state}
                     formChange={
                         (state) => {
                             this.setState(state);
-                            console.log('FormComponent CHANGE', state)
                         }
                     }
                 />
@@ -107,7 +116,7 @@ const FormComponent = (props) => {
                         <tr>
                             <td
                                 style={{textAlign: 'center'}}
-                                colspan={columns.length + 1}
+                                colSpan={columns.length + 1}
                             >
                                 <button>insert new</button>
                             </td>
