@@ -6,14 +6,10 @@ import { FormService } from '../../service';
 class Form extends React.Component {
     constructor(props) {
         super(props);
-        this.state = FormService.buildState(this.props.structure);
-        this.state.regulaments = [{
-            regulament: 'file://...',
-            label: 'Regulamento de Teste 1'
-        }, {
-            regulament: 'file://...',
-            label: 'Regulamento de Teste 2'
-        }]
+        this.state = {
+            ...FormService.buildState(this.props.structure),
+            ...props.state
+        };
     }
 
     render() {
@@ -58,7 +54,7 @@ const FormComponent = (props) => {
                             formChange({
                                 ...state,
                                 ...structure.name
-                                    ? { [structure.name]: form } 
+                                    ? { [structure.name]: form }
                                     : form
                             });
                         }}
@@ -98,7 +94,9 @@ const FormComponent = (props) => {
                     <tbody>
                         {data.map((row, key) => (
                             <tr key={key}>
-                                <td></td>
+                                <td>
+                                    <button>edit</button>
+                                </td>
                                 {columns.map(column => (
                                     <td key={column}>
                                         {row[column]}
@@ -106,6 +104,14 @@ const FormComponent = (props) => {
                                 ))}
                             </tr>
                         ))}
+                        <tr>
+                            <td
+                                style={{textAlign: 'center'}}
+                                colspan={columns.length + 1}
+                            >
+                                <button>insert new</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </CollectionWrapper>

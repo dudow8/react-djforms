@@ -61,7 +61,18 @@ const PosForm = FB.form(
 );
 
 ReactDOM.render(<div>
-    <Form structure={PosForm} />
+    <Form
+        structure={PosForm}
+        state={{
+            regulaments: [{
+                regulament: 'file://...',
+                label: 'Regulamento de Teste 1'
+            }, {
+                regulament: 'file://...',
+                label: 'Regulamento de Teste 2'
+            }]
+        }}
+    />
 </div>, document.getElementById('root'));
 
 console.log('PosForm', PosForm)

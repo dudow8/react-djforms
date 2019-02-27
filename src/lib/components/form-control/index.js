@@ -75,6 +75,7 @@ const TextInput = styled.input`
     height: 35px;
     padding: 0px 10px;
     width: 100%;
+    box-sizing: border-box;
 `;
 const LongTextInput = styled.textarea`
     border: 1px solid #dddddd;
@@ -82,6 +83,7 @@ const LongTextInput = styled.textarea`
     font-size: 14px;
     padding: 10px 10px;
     width: 100%;
+    box-sizing: border-box;
 `;
 const Dropdown = styled.select`
     border: 1px solid #dddddd;
@@ -90,6 +92,7 @@ const Dropdown = styled.select`
     height: 35px;
     padding: 0px 10px;
     width: 100%;
+    box-sizing: border-box;
 `;
 const ErrorMessage = styled.p`
     color: darkred;
