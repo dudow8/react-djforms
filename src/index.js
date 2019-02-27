@@ -2,77 +2,69 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { 
     FormBuilder as FB,
-    FormComponent as Form
+    FormComponent
 } from './lib';
 
-const PosForm = FB.form(
+// Build the form structure following the project needs
+const formStructure = FB.form(
     null,
     FB.group({
         fields: [
-            { name: 'HeaderTitle', label: 'Título principal', type: 'text' },
-            { name: 'HeaderSubTitle', label: 'Subtítulo', type: 'text' },
-            { name: 'HeaderDescription', label: 'Descrição do header', type: 'text' },
+            { name: 'title', label: 'Header Title', type: 'text' },
+            { name: 'description', label: 'Header Description', type: 'text' },
+            { 
+                name: 'tag',
+                label: 'Tag',
+                type: 'select', 
+                options: [
+                    { value: 'h1', label: 'h1' },
+                    { value: 'h2', label: 'h2' },
+                    { value: 'h3', label: 'h3' }
+                ]
+        }
         ]
     }),
     FB.collection({
-        name: 'regulaments',
-        label: 'Regulamentos',
-        columns: { label: 'Arquivo de regulamento', 'regulament': 'Arquivo' },
+        name: 'files',
+        label: 'Files',
+        columns: { label: 'Display Name', file: 'File' },
         form: [
             FB.group({
                 orientation: 'vertical',
                 fields: [
-                    { name: 'regulament', label: 'Arquivo de regulamento', type: 'text' },
-                    { name: 'label', label: 'Nome de exibição', type: 'text' }
+                    { name: 'label', label: 'Display Name', type: 'text' },
+                    { name: 'file', label: 'File', type: 'text' }
                 ]
             })
         ],
     }),
-    FB.form(
-        'payload',
-        FB.group({
-            orientation: 'horizontal',
-            fields: [
-                { name: 'HeaderTitlePayload', label: 'Título principal', type: 'text' },
-                { name: 'HeaderSubTitlePayload', label: 'Subtítulo', type: 'text' },
-            ]
-        }),
-        FB.form(
-            'payloadIntern',
-            FB.group({
-                orientation: 'horizontal',
-                fields: [
-                    { name: 'HeaderTitlePayload2', label: 'Título principal 2', type: 'text' },
-                    { name: 'HeaderSubTitlePayload2', label: 'Subtítulo 2', type: 'text' },
-                ]
-            }),
-            FB.form(
-                'payloadInternIntern',
-                FB.group({
-                    orientation: 'horizontal',
-                    fields: [
-                        { name: 'HeaderTitlePayload3', label: 'Título principal 3', type: 'text' },
-                        { name: 'HeaderSubTitlePayload3', label: 'Subtítulo 3', type: 'text' },
-                    ]
-                })
-            )
-        )
-    )
 );
+// Create your component using FormComponent
+export class ExampleForm extends React.Component {
+    render() {
+        const {state = {}, onSubmit} = this.props;
+        return (<>
+            <button type="button" onClick={() => this.formRef.submit()}>
+                Submit
+            </button>
+            <FormComponent
+                ref={ref => this.formRef = ref}
+                structure={formStructure}
+                state={state}
+                onSubmit={onSubmit}
+            />
+        </>)
+    }
+} 
 
 ReactDOM.render(<div>
-    <Form
-        structure={PosForm}
+    <ExampleForm 
+        onSubmit={form => console.log(form)}
         state={{
-            regulaments: [{
-                regulament: 'file://...',
-                label: 'Regulamento de Teste 1'
-            }, {
-                regulament: 'file://...',
-                label: 'Regulamento de Teste 2'
-            }]
+            files: [
+                { label: 'File One', file: 'https://...' },
+                { label: 'File Two', file: 'https://...' }
+            ]
         }}
     />
 </div>, document.getElementById('root'));
-
-console.log('PosForm', PosForm)
