@@ -21,23 +21,30 @@ const formStructure = FB.form(
                     { value: 'h2', label: 'h2' },
                     { value: 'h3', label: 'h3' }
                 ]
-        }
+            }
         ]
     }),
-    FB.collection({
-        name: 'files',
-        label: 'Files',
-        columns: { label: 'Display Name', file: 'File' },
-        form: [
-            FB.group({
-                orientation: 'vertical',
-                fields: [
-                    { name: 'label', label: 'Display Name', type: 'text' },
-                    { name: 'file', label: 'File', type: 'text' }
-                ]
-            })
-        ],
-    }),
+    FB.form(
+        'dependencies',
+        FB.group({
+            fields: [
+                { name: 'title', label: 'Dependencies Description', type: 'text' }
+            ]
+        }),
+        FB.collection({
+            name: 'files',
+            label: 'Files',
+            columns: { label: 'Display Name', file: 'File' },
+            form: [
+                FB.group({
+                    fields: [
+                        { name: 'label', label: 'Display Name', type: 'text' },
+                        { name: 'file', label: 'File', type: 'text' }
+                    ]
+                })
+            ],
+        })
+    ),
 );
 // Create your component using DJForm
 export class ExampleForm extends React.Component {
@@ -61,10 +68,10 @@ ReactDOM.render(<div>
     <ExampleForm 
         onSubmit={form => console.log(form)}
         state={{
-            files: [
-                { label: 'File One', file: 'https://...' },
-                { label: 'File Two', file: 'https://...' }
-            ]
+            title: 'Teste',
+            dependencies: {
+                title: 'Default'
+            }
         }}
     />
 </div>, document.getElementById('root'));
