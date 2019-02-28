@@ -1,7 +1,7 @@
 {
   "name": "react-djforms",
-  "version": "0.0.1",
-  "description": "Easily build forms to your react app using a simple json configuration file",
+  "version": "0.0.2",
+  "description": "DJForms is a simple way for building forms to your react app using a flexible structure.",
   "author": "Luann Francisco",
   "keywords": [],
   "main": "dist/index.js",
