@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import * as deepmerge from 'deepmerge';
 import FormControl from '../form-control';
 import Modal from '../modal';
 import { FormService } from '../../service';
@@ -7,10 +8,10 @@ import { FormService } from '../../service';
 class Form extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            ...FormService.buildState(this.props.structure),
-            ...props.state
-        };
+        this.state = deepmerge(
+            FormService.buildState(this.props.structure),
+            props.state
+        )
     }
 
     submit() {
