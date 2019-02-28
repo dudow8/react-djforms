@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import FormControl from '../form-control';
+import Modal from '../modal';
 import { FormService } from '../../service';
 
 class Form extends React.Component {
@@ -19,12 +20,7 @@ class Form extends React.Component {
 
     render() {
         return (
-            <FormWrapper
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    this.submit();
-                }}
-            >
+            <FormWrapper>
                 <FormComponent
                     structure={this.props.structure}
                     state={this.state}
@@ -82,48 +78,21 @@ const FormComponent = (props) => {
     }
 
     if(structure.collection) {
-        const columns = Object.keys(structure.columns);
         const data = state[structure.name];
         return(
-            <CollectionWrapper>
-                {structure.label && <h2>{structure.label}</h2>}
-                <Table>
-                    {columns.length && 
-                        <thead>
-                            <tr>
-                                <th width="1px">#</th>
-                                {columns.map((column, key) => (
-                                    <th key={key}>
-                                        {structure.columns[column]}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                    }
-                    <tbody>
-                        {data.map((row, key) => (
-                            <tr key={key}>
-                                <td>
-                                    <button>edit</button>
-                                </td>
-                                {columns.map(column => (
-                                    <td key={column}>
-                                        {row[column]}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                        <tr>
-                            <td
-                                style={{textAlign: 'center'}}
-                                colSpan={columns.length + 1}
-                            >
-                                <button>insert new</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </CollectionWrapper>
+            <FormCollectionComponent
+                structure={structure}
+                data={data}
+                handleChange={collection => {
+                    props.handleChange({
+                        target: {
+                            name: structure.name,
+                            type: 'collection',
+                            value: collection
+                        }
+                    })
+                }}
+            />
         )
     }
 
@@ -146,7 +115,123 @@ const FormComponent = (props) => {
     }
 }
 
-const FormWrapper = styled.form`
+class FormCollectionComponent extends React.Component {
+    state = {
+        showModal: false,
+        formData: {},
+        indexEditing: -1
+    }
+
+    render() {
+        const { structure, data, handleChange } = this.props;
+        const { showModal, formData, indexEditing } = this.state;
+        const columns = Object.keys(structure.columns);
+        return(
+            <CollectionWrapper>
+                {structure.label && <h2>{structure.label}</h2>}
+                <Table>
+                    {columns.length && 
+                        <thead>
+                            <tr>
+                                <th width="1px">#</th>
+                                {columns.map((column, key) => (
+                                    <th key={key}>
+                                        {structure.columns[column]}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                    }
+                    <tbody>
+                        {data.map((row, key) => (
+                            <tr key={key}>
+                                <td>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            this.setState({
+                                                showModal: true,
+                                                indexEditing: key,
+                                                formData: row
+                                            });
+                                        }}
+                                    >
+                                        edit
+                                    </button>
+                                </td>
+                                {columns.map(column => (
+                                    <td key={column}>
+                                        {row[column]}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                        <tr>
+                            <td
+                                style={{textAlign: 'center'}}
+                                colSpan={columns.length + 1}
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        this.setState({
+                                            showModal: true
+                                        })
+                                    }}
+                                >
+                                    add new
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
+                {showModal && <Modal
+                    windowTitle={structure.label && structure.label}
+                    windowActions={[
+                        { label: "save", onClick: () => this.formRef.submit() },
+                        indexEditing !== -1 && {
+                            label: "remove",
+                            onClick: () => {
+                                handleChange([ ...data.slice(0, indexEditing), ...data.slice(indexEditing + 1) ]);
+                                this.setState({
+                                    showModal: false,
+                                    indexEditing: -1,
+                                    formData: {}
+                                });
+                            }
+                        }
+                    ]}
+                    onClose={() => {
+                        this.setState({
+                            showModal: false
+                        })
+                    }}>
+                    <CollectionModalWrapper>
+                        <Form
+                            ref={ref => this.formRef = ref}
+                            structure={{ collection: false, form: structure.form }}
+                            state={formData}
+                            onSubmit={(form) => {
+                                if(indexEditing !== -1) {
+                                    handleChange([ ...data.slice(0, indexEditing), form, ...data.slice(indexEditing + 1) ]);
+                                } else {
+                                    handleChange([ ...data, ...[form] ]);
+                                }
+                                this.setState({
+                                    showModal: false,
+                                    indexEditing: -1,
+                                    formData: {}
+                                });
+                            }}
+                        />
+                    </CollectionModalWrapper>
+                </Modal>}
+            </CollectionWrapper>
+        )
+    }
+}
+
+const FormWrapper = styled.div`
     width: 100%;
 `;
 const FormInputGroup = styled.div`
@@ -199,6 +284,9 @@ const Table = styled.table`
             background: #fafafa;
         }
     }
+`
+const CollectionModalWrapper = styled.div`
+    padding: 20px 15px;
 `
 
 export default Form;

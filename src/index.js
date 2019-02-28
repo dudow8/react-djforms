@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { 
     FormBuilder as FB,
-    FormComponent
+    DJForm
 } from './lib';
 
 // Build the form structure following the project needs
@@ -39,7 +39,7 @@ const formStructure = FB.form(
         ],
     }),
 );
-// Create your component using FormComponent
+// Create your component using DJForm
 export class ExampleForm extends React.Component {
     render() {
         const {state = {}, onSubmit} = this.props;
@@ -47,7 +47,7 @@ export class ExampleForm extends React.Component {
             <button type="button" onClick={() => this.formRef.submit()}>
                 Submit
             </button>
-            <FormComponent
+            <DJForm
                 ref={ref => this.formRef = ref}
                 structure={formStructure}
                 state={state}
@@ -68,3 +68,5 @@ ReactDOM.render(<div>
         }}
     />
 </div>, document.getElementById('root'));
+
+console.log(formStructure)

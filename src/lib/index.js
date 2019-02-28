@@ -3,5 +3,5 @@ import { Form } from './components';
 
 export {
     FormService as FormBuilder,
-    Form as FormComponent
+    Form as DJForm
 };

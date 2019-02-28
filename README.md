@@ -11,7 +11,7 @@ After adding react-djforms to your project you just need to import using ES6 mod
 Here is a small example to show how simple is building forms using the DJForms:
 ````jsx
 // Import the lib to your project
-import {  FormBuilder as FB, FormComponent } from 'react-djforms';
+import {  FormBuilder as FB, DJForm } from 'react-djforms';
 
 // Build the form structure following the project needs
 const formStructure = FB.form(
@@ -23,7 +23,7 @@ const formStructure = FB.form(
         ]
     })
 );
-// Create your component using FormComponent
+// Create your component using DJForm
 export class ExampleForm extends React.Component {
     render() {
         const {state = {}, onSubmit} = this.props;
@@ -31,7 +31,7 @@ export class ExampleForm extends React.Component {
             <button type="button" onClick={() => this.formRef.submit()}>
                 Submit
             </button>
-            <FormComponent
+            <DJForm
                 ref={ref => this.formRef = ref}
                 structure={formStructure}
                 state={state}
@@ -42,8 +42,8 @@ export class ExampleForm extends React.Component {
 } 
 ````
 ## Documentation
-You gonna need to manage only two dependencies to work with DJForms: the `FormBuilder` and the `FormComponent`.
-The `FormBuilder` is the tool you gonna use to help building the form structure and the `FormComponent` the component who will render the form using the before builded structure.
+You gonna need to manage only two dependencies to work with DJForms: the `FormBuilder` and the `DJForm`.
+The `FormBuilder` is the tool you gonna use to help building the form structure and the `DJForm` the component who will render the form using the before builded structure.
 
 ### FormBuilder
 FormBuilder has tree helper methods to build the form structure: `form`, `collection` and `group`.
