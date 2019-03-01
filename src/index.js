@@ -9,6 +9,7 @@ import {
 const formStructure = FB.form(
     null,
     FB.group({
+        label: 'Label Test',
         fields: [
             { name: 'title', label: 'Header Title', type: 'text' },
             { name: 'description', label: 'Header Description', type: 'text' },
@@ -37,6 +38,7 @@ const formStructure = FB.form(
             columns: { label: 'Display Name', file: 'File' },
             form: [
                 FB.group({
+                    label: 'Regulamento',
                     fields: [
                         { name: 'label', label: 'Display Name', type: 'text' },
                         { name: 'file', label: 'File', type: 'text' }
