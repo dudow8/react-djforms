@@ -18,15 +18,11 @@ FC.addType('select', ({options = [], ...props}) => (
 ));
 
 FC.addType(['text', 'password', 'date', 'time'], ({field: {type}, ...props}) => (
-    <>
-        {['text', 'password', 'date', 'time'].includes(type) &&
-            <TextInput
-                {...type === 'date' && {pattern: '[0-9]{2}/[0-9]{2}/[0-9]{4}'}}
-                {...type === 'time' && {step: 1}}
-                {...props}
-            />
-        }
-    </>
+    <TextInput
+        {...type === 'date' && {pattern: '[0-9]{2}/[0-9]{2}/[0-9]{4}'}}
+        {...type === 'time' && {step: 1}}
+        {...props}
+    />
 ));
 
 FC.addType('long-text', (props) => (
