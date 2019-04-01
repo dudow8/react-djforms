@@ -99,19 +99,22 @@ const FormComponent = (props) => {
 
     if(!structure.form) {
         return(
-            <FormInputGroup orientation={structure.orientation || 'vertical'}>
-                {structure.fields.map((item, key) => (
-                    <FormControl
-                        key={key}
-                        handleChange={props.handleChange}
-                        field={item}
-                        value={state[item.name]}
-                        // error={errors[item.name]}
-                        label={item.label}
-                        options={item.options}
-                    />
-                ))}
-            </FormInputGroup>
+            <InputGroupWrapper delimited={structure.delimited}>
+                {structure.label && <h2>{structure.label}</h2>}
+                <FormInputGroup orientation={structure.orientation || 'vertical'}>
+                    {structure.fields.map((item, key) => (
+                        <FormControl
+                            key={key}
+                            handleChange={props.handleChange}
+                            field={item}
+                            value={state[item.name]}
+                            // error={errors[item.name]}
+                            label={item.label}
+                            options={item.options}
+                        />
+                    ))}
+                </FormInputGroup>
+            </InputGroupWrapper>
         )
     }
 }
@@ -235,6 +238,22 @@ class FormCollectionComponent extends React.Component {
 const FormWrapper = styled.div`
     width: 100%;
 `;
+const InputGroupWrapper = styled.div`
+    border-top: ${props => props.delimited ? '1px solid #cccccc' : '0px'};
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: ${props => props.delimited ? '10px 0px' : '0px'};;
+    padding-top: ${props => props.delimited ? '10px' : '0px'};
+    
+    > h2 {
+        font-size: 20px;
+        font-weight: 600;
+        border-bottom: 1px solid #ddd;
+        padding: 0px 0px 10px;
+        margin: 15px 0px;
+    }
+`;
 const FormInputGroup = styled.div`
     display: flex;
     flex-direction: ${props => (
@@ -253,11 +272,11 @@ const CollectionWrapper = styled.div`
     margin: 10px 0px 20px;
 
     > h2 {
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 600;
         border-bottom: 1px solid #ddd;
         padding: 0px 0px 10px;
-        margin: 0px 0px 0px;
+        margin: 0px 0px 15px;
     }
 `;
 const Table = styled.table`
