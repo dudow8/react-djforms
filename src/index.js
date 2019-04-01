@@ -1,9 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { 
+import {
+    addType,
     FormBuilder as FB,
     DJForm
 } from './lib';
+
+// Crate a custom libtype
+addType('custom', (props) => (
+    <input
+        placeholder={props.field.placeholder}
+        {...props}
+    />
+));
 
 // Build the form structure following the project needs
 const formStructure = FB.form(
@@ -29,7 +38,8 @@ const formStructure = FB.form(
         'dependencies',
         FB.group({
             fields: [
-                { name: 'title', label: 'Dependencies Description', type: 'text' }
+                { name: 'title', label: 'Dependencies Description', type: 'text' },
+                { name: 'custom', label: 'Custom FormControl', type: 'custom', placeholder: 'Custom FormControl Placeholder' }
             ]
         }),
         FB.collection({
