@@ -1,57 +1,58 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FormControlService as FC } from '../../service';
 
-const FormControl = ({handleChange, label, field, value, options = [], error}) => (
-    <Wrapper>
-        <Label>
-            {label}
-        </Label>
-        {['text', 'password', 'date', 'time'].includes(field.type) &&
-            <TextInput
-                onChange={handleChange}
-                name={field.name}
-                type={field.type}
-                value={value}
-                {...field.type === 'date' && {
-                    pattern: '[0-9]{2}/[0-9]{2}/[0-9]{4}'
-                }}
-                {...field.type === 'time' && {
-                    step: 1
-                }}
-            />
-        }
-        {['long-text'].includes(field.type) &&
-            <LongTextInput
-                onChange={handleChange}
-                name={field.name}
-                type={field.type}
-                value={value}
-                rows="3"
-            />
-        }
-        {['select'].includes(field.type) &&
-            <Dropdown
-                onChange={handleChange}
-                name={field.name}
-                type={field.type}
-                value={value}
-            >
-                <option disabled={true} value={''}>...</option>
-                {options.map((item, key) => (
-                    <option
-                        value={item.value}
-                        key={key}>
-                        {item.label}
-                    </option>
-                ))}
-            </Dropdown>
-        }
+FC.addType('select', ({options = [], ...props}) => (
+    <Dropdown
+        {...props}
+    >
+        <option disabled={true} value={''}>...</option>
+        {options.map((item, key) => (
+            <option
+                value={item.value}
+                key={key}>
+                {item.label}
+            </option>
+        ))}
+    </Dropdown>
+));
 
-        {error && <ErrorMessage>
-            {error}
-        </ErrorMessage>}
-    </Wrapper>
-);
+FC.addType(['text', 'password', 'date', 'time'], ({field: {type}, ...props}) => (
+    <TextInput
+        {...type === 'date' && {pattern: '[0-9]{2}/[0-9]{2}/[0-9]{4}'}}
+        {...type === 'time' && {step: 1}}
+        {...props}
+    />
+));
+
+FC.addType('long-text', (props) => (
+    <LongTextInput
+        rows="3"
+        {...props}
+    />
+));
+
+const FormControl = ({handleChange, label, field, value, error, ...props}) => {
+    const Input = FC.getComponentByType(field.type);
+    return (
+        <Wrapper>
+            <Label>
+                {label}
+            </Label>
+            {Input && <Input
+                onChange={handleChange}
+                name={field.name}
+                type={field.type}
+                value={value}
+                field={field}
+                {...props}
+            />}
+            {error && <ErrorMessage>
+                {error}
+            </ErrorMessage>}
+        </Wrapper>
+    );
+};
 
 const Wrapper = styled.div`
     display: flex;
